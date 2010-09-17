@@ -124,6 +124,9 @@
   if ($task_list->canReorderTasks(logged_user())) {
     $options[] = '<a href="' . $task_list->getReorderTasksUrl($on_list_page) . '">' . lang('reorder tasks') . '</a>';
   } // if
+  if ($task_list->canSaveAsTemplateTasks(logged_user())) {
+    $options[] = '<a href="' . $task_list->getSaveAsTemplateTasksUrl($on_list_page) . '">' . lang('save as template') . '</a>';
+  } // if
 ?>
 <?php if (count($options)) { ?>
   <div class="options">

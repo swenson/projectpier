@@ -10,6 +10,13 @@
 
 ?>
 <?php if ($task_list->isNew()) { ?>
+  <div>
+    <a href="<?php echo $task_list->fromTemplateUrl(active_project()->getId()); ?>">(create from template)</a>
+  </div>
+  
+<?php } // if ?>
+
+<?php if ($task_list->isNew()) { ?>
 <form action="<?php echo get_url('task', 'add_list') ?>" method="post">
 <?php } else { ?>
 <form action="<?php echo $task_list->getEditUrl() ?>" method="post">

@@ -88,6 +88,18 @@
     // ---------------------------------------------------
     //  Operations
     // ---------------------------------------------------
+
+    function pickle()
+    {
+      $tasks = array();
+      foreach ($this->getTasks() as $task)
+      {
+        $tasks[] = array('text' => $task->getText());
+      }
+      return serialize(array('name' => $this->getName() . ' [template]',
+                             //'tags' => $this->getTags(),
+                             'tasks' => $tasks));
+    }
     
     /**
     * Add task to this list
@@ -471,6 +483,16 @@
       } // if
       return $this->canManage($user, $this->getProject());
     } // canAddTask
+
+    /**
+     * Check if user can save this list as a template
+     *
+     * @param User $user
+     * @return boolean
+     */
+    function canSaveAsTemplateTasks(User $user) {
+      return $this->canReorderTasks($user);
+    }
     
     /**
     * Check if user can reorder tasks in this list
@@ -567,6 +589,16 @@
       } // if
       return get_url('task', 'reorder_tasks', $attributes);
     } // getReorderTasksUrl
+ 
+    /**
+    * Save as template tasks URL
+    *
+    * @param boolean $redirect_to_list
+    * @return string
+    */
+    function getSaveAsTemplateTasksUrl($redirect_to_list = true) {
+      return get_url('task', 'save_as_template', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
+    } // getSaveAsTemplateTasksUrl
     
     // ---------------------------------------------------
     //  System
@@ -665,6 +697,10 @@
     function getObjectUrl() {
       return $this->getViewUrl();
     } // getObjectUrl
+    
+    function fromTemplateUrl($active_project_id) {
+      return get_url('task', 'from_template', array('id' => $this->getId(), 'active_project' => $active_project_id));
+    }
     
   } // ProjectTaskList 
 

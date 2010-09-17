@@ -24,6 +24,8 @@
     'tasks' => 'Tasks',
     'task list' => 'Task list',
     'task lists' => 'Task lists',
+    'task list template' => 'Task list template',
+    'task list templates' => 'Task list templates',
     'tag' => 'Tag',
     'tags' => 'Tags',
     'attachment' => 'Attachment',

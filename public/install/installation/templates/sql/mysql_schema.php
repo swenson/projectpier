@@ -258,6 +258,13 @@ CREATE TABLE `<?php echo $table_prefix ?>project_milestones` (
   KEY `created_on` (`created_on`)
 ) ENGINE=InnoDB <?php echo $default_charset ?>;
 
+CREATE TABLE `pp_project_task_list_templates` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) default NULL,
+  `data` blob default null,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB charset=utf8;
+
 CREATE TABLE `<?php echo $table_prefix ?>project_task_lists` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `milestone_id` int(10) unsigned NOT NULL default '0',

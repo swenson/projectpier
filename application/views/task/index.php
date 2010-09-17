@@ -9,6 +9,10 @@
   if (ProjectTaskList::canAdd(logged_user(), active_project())) {
     add_page_action(lang('add task list'), get_url('task', 'add_list'));
   } // if
+  if (logged_user()->isAdministrator()) {
+    add_page_action(lang('manage templates'), get_url('task', 'manage_templates'));
+  } // if
+ 
   //add_javascript_to_page('task_related.js');
 
 ?>

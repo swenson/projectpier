@@ -70,6 +70,7 @@
     'about to delete' => 'You are about to delete',
     
     // Success
+    'success save as template task list' => "Task list template was saved successfully",
     'success add project' => 'Project %s has been added successfully',
     'success edit project' => 'Project %s has been updated',
     'success delete project' => 'Project %s has been deleted',
@@ -236,6 +237,10 @@
     'log add projectmessages' => '\'%s\' added',
     'log edit projectmessages' => '\'%s\' updated',
     'log delete projectmessages' => '\'%s\' deleted',
+   
+    'log add projecttasklisttemplates' => '\'%s\' added',
+    'log edit projecttasklisttemplates' => '\'%s\' updated',
+    'log delete projecttasklisttemplates' => '\'%s\' deleted',
     
     'log add comments' => '%s added',
     'log edit comments' => '%s updated',
@@ -273,6 +278,10 @@
     
     'log edit projectfilerevisions' => '%s updated',
     'log delete projectfilerevisions' => '%s deleted',
+    
+    'task list template deleted successfully' => 'Task list template deleted successfully',
+    'error deleting task list template' => 'Error deleting task list template',
+    'error delete task list template' => 'Error deleting task list template',
   
   ); // array
 

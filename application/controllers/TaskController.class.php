@@ -1,5 +1,14 @@
 <?php
 
+function sanitize($data)
+{
+  if (get_magic_quotes_gpc())
+  {
+    $data = stripslashes($data);
+  }
+  return mysql_real_escape_string($data);
+}
+
   /**
   * Controller for handling task list and task related requests
   *
@@ -142,7 +151,7 @@
     */
     function edit_list() {
       $this->setTemplate('add_list');
-      
+
       $task_list = ProjectTaskLists::findById(get_id());
       if (!($task_list instanceof ProjectTaskList)) {
         flash_error(lang('task list dnx'));
@@ -253,6 +262,151 @@
         $this->redirectToUrl($task_list->getViewUrl());
       }
     } // delete_list
+    
+    function manage_templates() {
+      if (!ProjectTaskList::canAdd(logged_user(), active_project())) {
+        flash_error(lang('no access permissions'));
+        $this->redirectToReferer(get_url('task'));
+      } // if
+      
+      $templates = ProjectTaskListTemplates::findAll();
+      tpl_assign('templates', $templates);
+      
+      if (isset($_POST['delete_id']))
+      {
+        $delete_id = sanitize($_POST['delete_id']);
+        $temp = ProjectTaskListTemplates::findById($delete_id);
+        if ($temp == null)
+        {
+          flash_error(lang('error deleting task list template'));
+          return;
+        }
+        try
+        {
+          DB::beginWork();
+          $temp->delete();
+          ApplicationLogs::createLog($temp, active_project(), ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+          
+          flash_success(lang('task list template deleted successfully'));
+          $templates = ProjectTaskListTemplates::findAll();
+          tpl_assign('templates', $templates);                  
+        } catch(Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete task list template'));
+        } // try
+      }
+    }
+    
+    /**
+    * Add new task list from template
+    *
+    * @access public
+    * @param void
+    * @return null
+    */
+    function from_template() {
+      if (!ProjectTaskList::canAdd(logged_user(), active_project())) {
+        flash_error(lang('no access permissions'));
+        $this->redirectToReferer(get_url('task'));
+      } // if
+      
+      $templates = ProjectTaskListTemplates::findAll();
+      tpl_assign('templates', $templates);
+      
+      if (isset($_POST['name']) && isset($_POST['from_id']))
+      {
+        $template = ProjectTaskListTemplates::findById(sanitize($_POST['from_id']));
+        if ($template == null)
+        {
+          flash_error(lang('invalid template id'));
+          $this->redirectToReferer(get_url('project'));
+        }
+        $task_list = ProjectTaskListTemplates::fromPickle($template->getData());
+        if ($task_list == null)
+        {
+          flash_error(lang('invalid template id'));
+          $this->redirectToReferer(get_url('project'));
+        }
+        $task_list->setProjectId(active_project()->getId());
+        $task_list->setName(sanitize($_POST['name']));
+        
+        try
+        {
+          DB::beginWork();
+          
+          $task_list->save();
+          
+          ApplicationLogs::createLog($task_list, active_project(), ApplicationLogs::ACTION_ADD);
+          DB::commit();
+          $this->redirectToUrl($task_list->getViewUrl());
+          
+        } catch(Exception $e) {
+          DB::rollback();
+          tpl_assign('error', $e);
+        }
+      } // if
+      
+      
+    } // add_list
+    /**
+    * Save task list as a template
+    *
+    * @access public
+    * @param void
+    * @return null
+    */
+    function save_as_template() {
+      $this->setTemplate('save_as_template');
+      
+      $task_list = ProjectTaskLists::findById(get_id());
+      if (!($task_list instanceof ProjectTaskList)) {
+        flash_error(lang('task list dnx'));
+        $this->redirectTo('task');
+      } // if
+      
+      if (!$task_list->canEdit(logged_user())) {
+        flash_error(lang('no access permissions'));
+        $this->redirectTo('task');
+      } // if
+      
+      tpl_assign('task_list', $task_list);
+            
+      if (isset($_POST['new']) && isset($_POST['name']))
+      {
+        $name = sanitize($_POST['name']);
+        if (strlen($name) == 0)
+        {
+          flash_error(lang('task list template name required'));
+          $this->redirectTo('task');
+        }
+        if (ProjectTaskListTemplates::nameExists($name))
+        {
+          flash_error(lang('task list template unique'));
+          return;
+        }
+        $temp = new ProjectTaskListTemplate();
+        $data = $task_list->pickle();
+        $temp->setData($data);
+        $temp->setName($name);
+        
+        try {
+          DB::beginWork();
+          
+          $temp->save();
+          ApplicationLogs::createLog($temp, active_project(), ApplicationLogs::ACTION_ADD);
+          
+          DB::commit();
+          
+          flash_success(lang('success save as template task list', $temp->getName()));
+          $this->redirectToUrl($task_list->getViewUrl());
+          
+        } catch(Exception $e) {
+          DB::rollback();
+          tpl_assign('error', $e);
+        } // try
+      } // if
+    } // save as template
     
     /**
     * Show and process reorder tasks form

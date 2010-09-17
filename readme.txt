@@ -1,4 +1,14 @@
-           		
+About templates:
+
+This is an ongoing hack of ProjectPier to add templates where they are feasible.
+
+This is not the cleanest hack ever, though some attempt was made to work well
+with the rest of ProjectPier.
+
+--Christopher Swenson
+
+
+
 ~~~~~~~~~~~~~~~~~~~
 System requirements
 ~~~~~~~~~~~~~~~~~~~

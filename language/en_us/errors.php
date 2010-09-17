@@ -65,6 +65,8 @@
     // Add task list
     'task list name required' => 'Task list name value is required',
     'task list name unique' => 'Task list name must be unique in project',
+    'task list template name required' => 'Task list template name value is required',
+    'task list template unique' => 'Task list template name must be unique',
     
     // Add task
     'task text required' => 'Task text is required',
@@ -102,6 +104,8 @@
     'massmailer subject required' => 'Message subject is required',
     'massmailer message required' => 'Message body is required',
     'massmailer select recepients' => 'Please select users that will receive this email',
+
+    'invalid template id' => 'Invalid template selected',
     
   ); // array
 

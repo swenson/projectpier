@@ -51,6 +51,10 @@
     'edit task list' => 'Edit task list',
     'delete task list' => 'Delete task list',
     'reorder tasks' => 'Reorder tasks',
+    'save as template' => 'Save as template',
+    'create from template' => 'Create from template',
+    'delete template' => 'Delete template',
+    'manage templates' => 'Manage templates',
     
     // Task
     'add task' => 'Add task',
